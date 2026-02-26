@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "dotruler"
-version = "0.1.1"
+version = "0.1.2"
 description = "📐 One config. Every AI coding tool. Always in sync."
 readme = "README.md"
 license = "MIT"
