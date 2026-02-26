@@ -2,12 +2,12 @@
 
 from pathlib import Path
 
-import airules.outputs  # noqa: F401
-from airules.config import _parse_config, load_config, validate_config
+import dotruler.outputs  # noqa: F401
+from dotruler.config import _parse_config, load_config, validate_config
 
 
 def test_parse_config_full(sample_toml, tmp_path):
-    config_path = tmp_path / ".airules.toml"
+    config_path = tmp_path / ".dotruler.toml"
     config_path.write_text(sample_toml)
 
     config = load_config(config_path)

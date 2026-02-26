@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from airules.outputs.base import BaseRenderer
+    from dotruler.outputs.base import BaseRenderer
 
 _REGISTRY: dict[str, type[BaseRenderer]] = {}
 

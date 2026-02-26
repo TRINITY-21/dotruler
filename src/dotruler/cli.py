@@ -1,4 +1,4 @@
-"""CLI entrypoint for airules."""
+"""CLI entrypoint for dotruler."""
 
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ from rich.panel import Panel
 from rich.table import Table
 
 app = typer.Typer(
-    name="airules",
+    name="dotruler",
     help="One config. Every AI coding tool. Always in sync.",
     no_args_is_help=True,
 )
@@ -19,12 +19,12 @@ console = Console()
 
 def _load_or_exit(config_path: Path | None = None):
     """Load config or exit with a helpful message."""
-    from airules.config import find_config, load_config
+    from dotruler.config import find_config, load_config
 
     path = config_path or find_config()
     if not path:
         console.print(
-            "[red]No .airules.toml found.[/red] Run [bold]airules init[/bold] to create one."
+            "[red]No .dotruler.toml found.[/red] Run [bold]dotruler init[/bold] to create one."
         )
         raise typer.Exit(1)
 
@@ -37,9 +37,9 @@ def init(
     directory: Path = typer.Argument(Path("."), help="Project directory to scan"),
     force: bool = typer.Option(False, "--force", "-f", help="Overwrite existing config"),
 ):
-    """Scan your project and generate a starter .airules.toml."""
-    from airules.config import CONFIG_FILENAME
-    from airules.scanner import scan_project
+    """Scan your project and generate a starter .dotruler.toml."""
+    from dotruler.config import CONFIG_FILENAME
+    from dotruler.scanner import scan_project
 
     project_dir = directory.resolve()
     config_path = project_dir / CONFIG_FILENAME
@@ -122,8 +122,8 @@ def init(
             f"Created [bold green]{CONFIG_FILENAME}[/bold green]\n\n"
             "Next steps:\n"
             f"  1. Edit {CONFIG_FILENAME} — add your coding rules\n"
-            "  2. Run [bold]airules generate[/bold] to sync configs",
-            title="[bold]airules init[/bold]",
+            "  2. Run [bold]dotruler generate[/bold] to sync configs",
+            title="[bold]dotruler init[/bold]",
             border_style="green",
         )
     )
@@ -131,14 +131,14 @@ def init(
 
 @app.command()
 def generate(
-    config_path: Path = typer.Option(None, "--config", "-c", help="Path to .airules.toml"),
+    config_path: Path = typer.Option(None, "--config", "-c", help="Path to .dotruler.toml"),
     directory: Path = typer.Argument(Path("."), help="Project directory to write configs to"),
     dry_run: bool = typer.Option(False, "--dry-run", "-n", help="Preview without writing"),
 ):
     """Generate config files for all enabled AI tools."""
     # Import outputs to trigger registration
-    import airules.outputs  # noqa: F401
-    from airules.registry import get_renderer
+    import dotruler.outputs  # noqa: F401
+    from dotruler.registry import get_renderer
 
     config, found_path = _load_or_exit(config_path)
     project_dir = directory.resolve()
@@ -173,11 +173,11 @@ def generate(
 
 @app.command()
 def validate(
-    config_path: Path = typer.Option(None, "--config", "-c", help="Path to .airules.toml"),
+    config_path: Path = typer.Option(None, "--config", "-c", help="Path to .dotruler.toml"),
 ):
-    """Validate your .airules.toml config."""
-    import airules.outputs  # noqa: F401
-    from airules.config import validate_config
+    """Validate your .dotruler.toml config."""
+    import dotruler.outputs  # noqa: F401
+    from dotruler.config import validate_config
 
     config, found_path = _load_or_exit(config_path)
     issues = validate_config(config)
@@ -200,8 +200,8 @@ def validate(
 @app.command(name="list")
 def list_targets():
     """Show all available output targets."""
-    import airules.outputs  # noqa: F401
-    from airules.registry import list_targets as _list_targets
+    import dotruler.outputs  # noqa: F401
+    from dotruler.registry import list_targets as _list_targets
 
     targets = _list_targets()
 
@@ -221,14 +221,14 @@ def list_targets():
 
 @app.command()
 def diff(
-    config_path: Path = typer.Option(None, "--config", "-c", help="Path to .airules.toml"),
+    config_path: Path = typer.Option(None, "--config", "-c", help="Path to .dotruler.toml"),
     directory: Path = typer.Argument(Path("."), help="Project directory"),
 ):
     """Preview what would change before writing."""
     import difflib
 
-    import airules.outputs  # noqa: F401
-    from airules.registry import get_renderer
+    import dotruler.outputs  # noqa: F401
+    from dotruler.registry import get_renderer
 
     config, found_path = _load_or_exit(config_path)
     project_dir = directory.resolve()
@@ -275,16 +275,16 @@ def diff(
         console.print("\n[dim]Everything is in sync.[/dim]")
     else:
         console.print(
-            "\n[dim]Run[/dim] [bold]airules generate[/bold] [dim]to apply changes.[/dim]"
+            "\n[dim]Run[/dim] [bold]dotruler generate[/bold] [dim]to apply changes.[/dim]"
         )
 
 
 @app.command()
 def version():
     """Show the current version."""
-    from airules import __version__
+    from dotruler import __version__
 
-    console.print(f"airules [bold]{__version__}[/bold]")
+    console.print(f"dotruler [bold]{__version__}[/bold]")
 
 
 if __name__ == "__main__":

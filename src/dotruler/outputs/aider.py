@@ -1,27 +1,24 @@
-"""OpenAI Codex AGENTS.md renderer."""
+"""Aider CONVENTIONS.md renderer."""
 
 from __future__ import annotations
 
-from airules.models import AiRulesConfig
-from airules.outputs.base import BaseRenderer
-from airules.registry import register
-
-CODEX_BYTE_LIMIT = 32_768  # 32 KiB
+from dotruler.models import AiRulesConfig
+from dotruler.outputs.base import BaseRenderer
+from dotruler.registry import register
 
 
-@register("codex")
-class CodexRenderer(BaseRenderer):
-    target_id = "codex"
-    default_output_path = "AGENTS.md"
-    description = "OpenAI Codex agent instructions"
-    max_chars = CODEX_BYTE_LIMIT
+@register("aider")
+class AiderRenderer(BaseRenderer):
+    target_id = "aider"
+    default_output_path = "CONVENTIONS.md"
+    description = "Aider coding conventions"
 
     def render(self, config: AiRulesConfig) -> str:
         sections: list[str] = []
 
         # Header
         if config.project.name:
-            header = f"# {config.project.name}"
+            header = f"# {config.project.name} — Conventions"
             if config.project.description:
                 header += f"\n\n{config.project.description}"
             sections.append(header)
@@ -44,7 +41,7 @@ class CodexRenderer(BaseRenderer):
         # Commands
         commands = config.commands.as_dict()
         if commands:
-            cmd_lines = "\n".join(f"- **{name}:** `{cmd}`" for name, cmd in commands.items())
+            cmd_lines = "\n".join(f"- {name}: `{cmd}`" for name, cmd in commands.items())
             sections.append(f"## Commands\n\n{cmd_lines}")
 
         # Architecture

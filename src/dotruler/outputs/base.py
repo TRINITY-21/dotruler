@@ -5,7 +5,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from pathlib import Path
 
-from airules.models import AiRulesConfig, TargetOverride
+from dotruler.models import AiRulesConfig, TargetOverride
 
 
 class BaseRenderer(ABC):

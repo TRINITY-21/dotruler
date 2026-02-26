@@ -2,8 +2,8 @@
 
 from pathlib import Path
 
-import airules.outputs  # noqa: F401
-from airules.registry import get_renderer, list_targets
+import dotruler.outputs  # noqa: F401
+from dotruler.registry import get_renderer, list_targets
 
 
 def test_all_targets_registered():

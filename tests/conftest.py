@@ -1,8 +1,8 @@
-"""Shared fixtures for airules tests."""
+"""Shared fixtures for dotruler tests."""
 
 import pytest
 
-from airules.models import (
+from dotruler.models import (
     AiRulesConfig,
     ArchitectureConfig,
     CommandsConfig,

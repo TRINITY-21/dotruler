@@ -5,7 +5,7 @@ from __future__ import annotations
 import tomllib
 from pathlib import Path
 
-from airules.models import (
+from dotruler.models import (
     AiRulesConfig,
     ArchitectureConfig,
     CommandsConfig,
@@ -15,11 +15,11 @@ from airules.models import (
     TargetsConfig,
 )
 
-CONFIG_FILENAME = ".airules.toml"
+CONFIG_FILENAME = ".dotruler.toml"
 
 
 def find_config(start: Path | None = None) -> Path | None:
-    """Find .airules.toml starting from the given directory, walking up."""
+    """Find .dotruler.toml starting from the given directory, walking up."""
     current = start or Path.cwd()
     for directory in [current, *current.parents]:
         config_path = directory / CONFIG_FILENAME
@@ -29,7 +29,7 @@ def find_config(start: Path | None = None) -> Path | None:
 
 
 def load_config(path: Path) -> AiRulesConfig:
-    """Load and parse .airules.toml into typed config."""
+    """Load and parse .dotruler.toml into typed config."""
     with open(path, "rb") as f:
         raw = tomllib.load(f)
     return _parse_config(raw)
@@ -107,7 +107,7 @@ def validate_config(config: AiRulesConfig) -> list[str]:
     if not config.targets.enabled:
         issues.append("[error] targets.enabled is empty — no output files will be generated")
 
-    from airules.registry import list_targets
+    from dotruler.registry import list_targets
 
     available = list_targets()
     for target_id in config.targets.enabled:

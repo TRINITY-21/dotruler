@@ -3,7 +3,7 @@
 import json
 from pathlib import Path
 
-from airules.scanner import (
+from dotruler.scanner import (
     scan_commands,
     scan_existing_ai_configs,
     scan_frameworks,

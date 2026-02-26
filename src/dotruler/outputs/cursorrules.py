@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from airules.models import AiRulesConfig
-from airules.outputs.base import BaseRenderer
-from airules.registry import register
+from dotruler.models import AiRulesConfig
+from dotruler.outputs.base import BaseRenderer
+from dotruler.registry import register
 
 
 @register("cursorrules")

@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "airules"
+name = "dotruler"
 version = "0.1.0"
 description = "One config. Every AI coding tool. Always in sync."
 readme = "README.md"
@@ -27,15 +27,15 @@ dependencies = [
 ]
 
 [project.scripts]
-airules = "airules.cli:app"
+dotruler = "dotruler.cli:app"
 
 [project.urls]
-Homepage = "https://github.com/TRINITY-21/airules"
-Repository = "https://github.com/TRINITY-21/airules"
-Issues = "https://github.com/TRINITY-21/airules/issues"
+Homepage = "https://github.com/TRINITY-21/dotruler"
+Repository = "https://github.com/TRINITY-21/dotruler"
+Issues = "https://github.com/TRINITY-21/dotruler/issues"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/airules"]
+packages = ["src/dotruler"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

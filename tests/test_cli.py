@@ -4,7 +4,7 @@ from pathlib import Path
 
 from typer.testing import CliRunner
 
-from airules.cli import app
+from dotruler.cli import app
 
 runner = CliRunner()
 
@@ -32,18 +32,18 @@ def test_list():
 def test_init(tmp_path):
     result = runner.invoke(app, ["init", str(tmp_path)])
     assert result.exit_code == 0
-    assert (tmp_path / ".airules.toml").exists()
+    assert (tmp_path / ".dotruler.toml").exists()
 
 
 def test_init_no_overwrite(tmp_path):
-    (tmp_path / ".airules.toml").write_text("[project]\nname = 'x'\n")
+    (tmp_path / ".dotruler.toml").write_text("[project]\nname = 'x'\n")
     result = runner.invoke(app, ["init", str(tmp_path)])
     assert result.exit_code == 1
     assert "already exists" in result.output
 
 
 def test_init_force_overwrite(tmp_path):
-    (tmp_path / ".airules.toml").write_text("[project]\nname = 'x'\n")
+    (tmp_path / ".dotruler.toml").write_text("[project]\nname = 'x'\n")
     result = runner.invoke(app, ["init", str(tmp_path), "--force"])
     assert result.exit_code == 0
 
@@ -59,8 +59,8 @@ rules = ["Be consistent"]
 [targets]
 enabled = ["claude-md"]
 """
-    (tmp_path / ".airules.toml").write_text(config)
-    result = runner.invoke(app, ["generate", str(tmp_path), "--config", str(tmp_path / ".airules.toml")])
+    (tmp_path / ".dotruler.toml").write_text(config)
+    result = runner.invoke(app, ["generate", str(tmp_path), "--config", str(tmp_path / ".dotruler.toml")])
     assert result.exit_code == 0
     assert (tmp_path / "CLAUDE.md").exists()
 
@@ -76,8 +76,8 @@ rules = ["Be consistent"]
 [targets]
 enabled = ["claude-md"]
 """
-    (tmp_path / ".airules.toml").write_text(config)
-    result = runner.invoke(app, ["generate", str(tmp_path), "--config", str(tmp_path / ".airules.toml"), "--dry-run"])
+    (tmp_path / ".dotruler.toml").write_text(config)
+    result = runner.invoke(app, ["generate", str(tmp_path), "--config", str(tmp_path / ".dotruler.toml"), "--dry-run"])
     assert result.exit_code == 0
     assert not (tmp_path / "CLAUDE.md").exists()
     assert "would write" in result.output
@@ -94,8 +94,8 @@ rules = ["Be consistent"]
 [targets]
 enabled = ["claude-md"]
 """
-    (tmp_path / ".airules.toml").write_text(config)
-    result = runner.invoke(app, ["validate", "--config", str(tmp_path / ".airules.toml")])
+    (tmp_path / ".dotruler.toml").write_text(config)
+    result = runner.invoke(app, ["validate", "--config", str(tmp_path / ".dotruler.toml")])
     assert result.exit_code == 0
     assert "valid" in result.output
 
@@ -108,8 +108,8 @@ name = ""
 [targets]
 enabled = []
 """
-    (tmp_path / ".airules.toml").write_text(config)
-    result = runner.invoke(app, ["validate", "--config", str(tmp_path / ".airules.toml")])
+    (tmp_path / ".dotruler.toml").write_text(config)
+    result = runner.invoke(app, ["validate", "--config", str(tmp_path / ".dotruler.toml")])
     assert result.exit_code == 1
 
 
@@ -130,10 +130,10 @@ rules = ["Be consistent"]
 [targets]
 enabled = ["claude-md"]
 """
-    (tmp_path / ".airules.toml").write_text(config)
+    (tmp_path / ".dotruler.toml").write_text(config)
     # First generate
-    runner.invoke(app, ["generate", str(tmp_path), "--config", str(tmp_path / ".airules.toml")])
+    runner.invoke(app, ["generate", str(tmp_path), "--config", str(tmp_path / ".dotruler.toml")])
     # Then diff — should show unchanged
-    result = runner.invoke(app, ["diff", str(tmp_path), "--config", str(tmp_path / ".airules.toml")])
+    result = runner.invoke(app, ["diff", str(tmp_path), "--config", str(tmp_path / ".dotruler.toml")])
     assert result.exit_code == 0
     assert "unchanged" in result.output

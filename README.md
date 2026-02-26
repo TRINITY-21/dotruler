@@ -1,19 +1,29 @@
-# airules
+<p align="center">
+  <h1 align="center">dotruler</h1>
+  <p align="center">
+    <strong>One config. Every AI coding tool. Always in sync.</strong>
+  </p>
+  <p align="center">
+    <a href="https://pypi.org/project/dotruler/"><img src="https://img.shields.io/pypi/v/dotruler?color=blue" alt="PyPI"></a>
+    <a href="https://pypi.org/project/dotruler/"><img src="https://img.shields.io/pypi/pyversions/dotruler" alt="Python"></a>
+    <a href="https://github.com/TRINITY-21/dotruler/blob/main/LICENSE"><img src="https://img.shields.io/github/license/TRINITY-21/dotruler" alt="License"></a>
+  </p>
+</p>
 
-**One config. Every AI coding tool. Always in sync.**
+---
 
-Stop maintaining 5 separate config files for Claude Code, Cursor, Copilot, Windsurf, Codex, and Aider. Write your rules once in `.airules.toml`, generate all configs instantly.
+Stop maintaining 6 separate config files. Define your project rules once in `.dotruler.toml` and generate configs for **Claude Code**, **Cursor**, **GitHub Copilot**, **Windsurf**, **OpenAI Codex**, and **Aider** — instantly.
 
+```bash
+pip install dotruler
 ```
-pip install airules
-```
 
-## The Problem
+## Overview
 
-You use multiple AI coding tools. Each one wants its own config file:
+Modern development workflows involve multiple AI coding assistants, each requiring its own instruction file:
 
-| Tool | Config File |
-|------|------------|
+| AI Tool | Config File |
+|---------|------------|
 | Claude Code | `CLAUDE.md` |
 | Cursor | `.cursorrules` |
 | GitHub Copilot | `.github/copilot-instructions.md` |
@@ -21,41 +31,36 @@ You use multiple AI coding tools. Each one wants its own config file:
 | OpenAI Codex | `AGENTS.md` |
 | Aider | `CONVENTIONS.md` |
 
-They drift out of sync within a week. You update one, forget the others. Your AI tools give inconsistent results.
+These files inevitably drift out of sync — you update one, forget the rest, and your AI tools produce inconsistent results. **dotruler** solves this with a single source of truth.
 
-## The Fix
-
-```bash
-# Scan your project, generate a starter config
-airules init
-
-# Edit your single source of truth
-vim .airules.toml
-
-# Generate all configs at once
-airules generate
-```
-
-That's it. One file, all tools, always in sync.
-
-## Quick Start
-
-### 1. Install
+## How It Works
 
 ```bash
-pip install airules
+dotruler init          # Scan your project, scaffold .dotruler.toml
+vim .dotruler.toml     # Edit your single config
+dotruler generate      # Generate all target configs at once
 ```
 
-### 2. Initialize
+## Getting Started
+
+### Installation
+
+```bash
+pip install dotruler
+```
+
+Requires Python 3.11+.
+
+### Initialize
 
 ```bash
 cd your-project
-airules init
+dotruler init
 ```
 
-This scans your project — detects languages, frameworks, and existing commands — and creates `.airules.toml`.
+Automatically detects your languages, frameworks, package manager, and existing commands to scaffold a starter `.dotruler.toml`.
 
-### 3. Edit your config
+### Configure
 
 ```toml
 [project]
@@ -87,14 +92,14 @@ notes = [
 enabled = ["claude-md", "cursorrules", "copilot"]
 ```
 
-### 4. Generate
+### Generate
 
 ```bash
-airules generate
+dotruler generate
 ```
 
 ```
-Generating from .airules.toml...
+Generating from .dotruler.toml...
 
   ✓ CLAUDE.md
   ✓ .cursorrules
@@ -103,33 +108,33 @@ Generating from .airules.toml...
 Done. 3 configs generated.
 ```
 
-## Commands
+## CLI Reference
 
-| Command | What it does |
+| Command | Description |
 |---------|-------------|
-| `airules init` | Scan project, create starter `.airules.toml` |
-| `airules generate` | Generate all enabled config files |
-| `airules validate` | Check config for errors and warnings |
-| `airules diff` | Preview changes before writing |
-| `airules list` | Show all available output targets |
-| `airules generate --dry-run` | See what would be generated without writing |
+| `dotruler init` | Scan project and create starter `.dotruler.toml` |
+| `dotruler generate` | Generate config files for all enabled targets |
+| `dotruler generate --dry-run` | Preview output without writing files |
+| `dotruler validate` | Check config for errors and warnings |
+| `dotruler diff` | Show what would change before writing |
+| `dotruler list` | Display all available output targets |
 
 ## Supported Targets
 
 | Target | Output File | Char Limit |
 |--------|------------|------------|
-| `claude-md` | `CLAUDE.md` | none |
-| `cursorrules` | `.cursorrules` | none |
-| `copilot` | `.github/copilot-instructions.md` | none |
+| `claude-md` | `CLAUDE.md` | — |
+| `cursorrules` | `.cursorrules` | — |
+| `copilot` | `.github/copilot-instructions.md` | — |
 | `windsurf` | `.windsurfrules` | 12,000 |
 | `codex` | `AGENTS.md` | 32,768 |
-| `aider` | `CONVENTIONS.md` | none |
+| `aider` | `CONVENTIONS.md` | — |
 
-Windsurf and Codex have character limits — airules automatically enforces them.
+Character limits for Windsurf and Codex are automatically enforced during generation.
 
 ## Per-Target Overrides
 
-Need extra rules for a specific tool? Add target overrides:
+Append tool-specific rules or customize output paths per target:
 
 ```toml
 [targets]
@@ -137,28 +142,28 @@ enabled = ["claude-md", "cursorrules", "copilot"]
 
 [targets.claude-md]
 extra_rules = ["Use Read tool before editing files"]
-output_path = "CLAUDE.md"  # custom location
+output_path = "CLAUDE.md"
 
 [targets.cursorrules]
 extra_rules = ["Prefer .cursor/rules/*.mdc format"]
 ```
 
-## Plugin System
+## Plugin Architecture
 
-All output targets are plugins. Built-in ones cover the 6 major tools, but the registry pattern means anyone can add more.
+All output targets are implemented as plugins using a registry pattern. The 6 built-in targets cover the major AI coding tools, but the system is designed for extensibility — adding a new target requires a single file with a decorated class.
 
-## Why Not X?
+## Comparison
 
-| Tool | Issue |
-|------|-------|
-| Manual copy-paste | Drifts within a week |
-| Symlinks | Formats differ — Claude wants markdown headers, Cursor wants plain text |
-| ruler (2.5K stars) | Limited customization per tool |
-| rulesync (829 stars) | Node.js dependency |
-| ai-rulez (91 stars) | Go, 18 targets but low adoption |
+| Approach | Limitation |
+|----------|-----------|
+| Manual copy-paste | Drifts within days |
+| Symlinks | Formats differ across tools |
+| [ruler](https://github.com/intellectronica/ruler) | Limited per-tool customization |
+| [rulesync](https://github.com/dyoshikawa/rulesync) | Requires Node.js |
+| [ai-rulez](https://github.com/Goldziher/ai-rulez) | Requires Go |
 
-airules is Python-native, TOML-based, plugin-extensible, and validates your config.
+**dotruler** is Python-native, TOML-configured, plugin-extensible, and validates your config before generating.
 
 ## License
 
-MIT
+[MIT](LICENSE)

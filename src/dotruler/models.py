@@ -1,4 +1,4 @@
-"""Typed config dataclasses for .airules.toml."""
+"""Typed config dataclasses for .dotruler.toml."""
 
 from __future__ import annotations
 
